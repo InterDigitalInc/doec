@@ -1,12 +1,13 @@
- # Octree Entropy Coding
+ # DOEC: Deep Octree Entropy Coding
 
 This repository contains the implementation of "Point cloud geometry compression using learned octree entropy coding" (m59528 & m59529) by InterDigital. It is implemented based on the [pccAI](https://github.com/InterDigitalInc/pccAI) (*pick-kai*) framework—a PyTorch-based framework for conducting AI-based Point Cloud Compression (PCC) experiments.
+Additionally, currently this repository only contains the code for training and benchmarking of VoxelContextNet (VCN).
 
 ## Installation
 
 We tested our implementation on Python 3.6, PyTorch 1.7.0 and CUDA 10.1, under a conda virtual environment. For installation, please launch our installation script `install_torch-1.7.0+cu-10.1.sh` with the following command:
 ```bash
-echo y | conda create -n oec python=3.6 && conda activate oec && ./install_torch-1.7.0+cu-10.1.sh
+echo y | conda create -n doec python=3.6 && conda activate doec && ./install_torch-1.7.0+cu-10.1.sh
 ```
 It is highly recommended to look at the installation script which describes the details of the necessary packages. After that, put the binary of `pc_error` (MPEG D1 & D2 computation) under the `third_party` folder.
 
@@ -41,9 +42,9 @@ One can use the following command lines for benchmarking the selected rate point
  ```bash
 for i in {1..4}
 do
-   ./scripts/run.sh ./scripts/oec/bench_ford_pcn_r0$i.sh f 0
+   ./scripts/run.sh ./scripts/doec/bench_ford_vcn_r0$i.sh f 0
 done
-python ./utils/merge_csv.py --input_files ./results/bench_ford_pcn_r01/mpeg_report.csv ./results/bench_ford_pcn_r02/mpeg_report.csv ./results/bench_ford_pcn_r03/mpeg_report.csv ./results/bench_ford_pcn_r04/mpeg_report.csv --output_file ./results/bench_ford_pcn/mpeg_report.csv
+python ./utils/merge_csv.py --input_files ./results/bench_ford_vcn_r01/mpeg_report.csv ./results/bench_ford_vcn_r02/mpeg_report.csv ./results/bench_ford_vcn_r03/mpeg_report.csv ./results/bench_ford_vcn_r04/mpeg_report.csv --output_file ./results/bench_ford_vcn/mpeg_report.csv
  ```
 
 BD metrics and R-D curves are generated via the [MPEG reporting template for AI-based PCC](http://mpegx.int-evry.fr/software/MPEG/PCC/ai/mpeg-pcc-ai-report) (also available publically via [GitHub](https://github.com/yydlmzyz/AI-PCC-Reporting-Template)). For example, run the following command right under the folder of its repository:
@@ -55,22 +56,20 @@ It can also generate the average results for a certain category:
 python test_mean.py --category='am_frame' --csvdir1='csvfiles/reporting_template_lossy.csv' --csvdir2='/PATH/TO/mpeg_report.csv' --csvdir_stats='csvfiles/reporting_template_stats.csv' --xlabel='bppGeo' --ylabel='d1T'
 ```
 
-Replace `d1T` with `d2T` for computing the D2 metrics. The benchmarking of surface point clouds can be done in the same way. All the scripts for benchmarking are put under the `scripts/oec` folder. Please refer to the related MPEG contributions for example R-D curves.
+Replace `d1T` with `d2T` for computing the D2 metrics. The benchmarking of surface point clouds can be done in the same way. All the scripts for benchmarking are put under the `scripts/doec` folder. Please refer to the related MPEG contributions for example R-D curves.
 
 ### Training
 
 Take the training of the Ford sequences as example, one can directly run
  ```bash
-./scripts/run.sh ./scripts/oec/train_ford_pcn.sh d 0
+./scripts/run.sh ./scripts/doec/train_ford_vcn.sh d 0
  ```
-which trains the deep entropy model for Ford sequences. The trained model will be generated under the `results/train_ford_pcn` folder.
+which trains the deep entropy model for Ford sequences. The trained model will be generated under the `results/train_ford_vcn` folder.
 
 To understand the meanings of the options in the scripts for benchmarking/training, refer to `pccai/utils/option_handler.py` for details.
 
-NOTE: Training and benchmarking scripts are also provided for VCN and SparseVCN.
-
 ## License
-OEC code is released under the BSD License, see `LICENSE` for details.
+DOEC code is released under the BSD License, see `LICENSE` for details.
 
 ## Contacts
 Please contact Muhammad Lodhi (muhammad.lodhi@interdigital.com), for any questions.
