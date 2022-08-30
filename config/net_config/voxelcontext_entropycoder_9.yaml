@@ -1,0 +1,18 @@
+# Copyright (c) 2010-2022, InterDigital
+# All rights reserved. 
+
+# See LICENSE under the root folder.
+
+
+# Network configuration
+
+---
+architecture: octree_entropy_coder
+modules:
+    # entropy_bottleneck: 16
+    cw_gen:
+        model: voxelcontextentropycoder
+        conv3d_dims:  [1, 32, 64, 128, 128]
+        kernel_size:  3
+        fc_dims:    [132, 192, 256, 256, 256] #132 = 128(last conv3d dim) + 4(node loc + level)
+        dolastrelu: True

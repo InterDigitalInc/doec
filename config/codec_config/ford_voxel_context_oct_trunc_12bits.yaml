@@ -1,0 +1,40 @@
+# Copyright (c) 2010-2022, InterDigital
+# All rights reserved. 
+
+# See LICENSE under the root folder.
+
+
+# Configure the encoder/decoder for actual compression/decompression
+
+# Codec class
+codec: 'octarray_partition'
+
+# if not benchmarking CRM keep three options below to be False
+up_sample: False #put True only if using CRM with upsampling
+lossless: False #put True only if using lossless CRM
+lossless_pred: False #if lossless_pred is True, lossless is False
+
+translate: [131072, 131072, 131072] #[0, 0, 0], translate the PC using -bbox_min
+# for frame based data loading should reflect the scale*(bbox_max-bbox_min) == 2**level_min == 2**level_max
+scale: 0.015625 #use scale 0.015625 for model trained with 12 bit data, scale 0.25 for model with 16 bit data
+# to truncate at a particular level, keep the scale fixed according to 12 bit to make a 12 bit octree
+# then change level_min = level_max to specify the truncation level
+
+# Options about octree partitioning
+octree_cfg:
+    bbox_min: [0, 0, 0] #[-131072, -131072, -131072], if translation is non-zero make the origin zero
+    bbox_max: [262143, 262143, 262143] #for 2**18
+    point_min: 64 # marked as skip if points in a block less than this number
+    point_max: 2048 # keep splitting if points in a block larger than this number
+    level_min: 12
+    level_max: 12
+    return_octree_blocks: all # (False, dense, skip, all)
+
+# size of the voxel neighborhood
+normalized_vox_dist: 9
+
+max_num_points: inf # maximum number of points that can be handled
+entropy_coder: rans
+peak_value: 30000
+
+# Other options to be added..

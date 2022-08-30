@@ -1,0 +1,56 @@
+# Copyright (c) 2010-2022, InterDigital
+# All rights reserved. 
+
+# See LICENSE under the root folder.
+
+
+# Common options of the dataset
+dataset: ford_oct_voxel_context
+rw_octree: False
+rw_partition_scheme: default
+translate: [131072, 131072, 131072] #[0, 0, 0], translate the PC using -bbox_min
+scale: 0.015625 #this acts as quant_scale, for frame based data loading should reflect the scale*(bbox_max-bbox_min) == 2**level_min == 2**level_max 
+max_num_points: inf # fix max_num_points to inf if using intra_frame_batch during training
+
+# Options about octree partitioning
+octree_cfg:
+    bbox_min: [0, 0, 0] #[-131072, -131072, -131072], if translation is non-zero make the origin zero
+    bbox_max: [262143, 262143, 262143] #[131072, 131072, 131072], if translation is non-zero put here (bbox_max-bbox_min)
+    point_min: 64 # marked as skip if points in a block less than this number
+    point_max: 2048 # keep splitting if points in a block larger than this number
+    level_min: 12 #for full resolution octree use 18
+    level_max: 12 #for full resolution octree use 18
+    intra_frame_batch: 1000 #fix batch size to be 1 if using this argument
+
+# size of the voxel neighborhood
+normalized_vox_dist: 9
+
+# Options on the splitting scheme
+splitting:
+    train:
+        - 1
+    test:
+        - 2
+        - 3
+
+# Options under individual configurations
+# fix batch size to 1 if using intra_frame_batch during training
+train_cfg:
+    batch_size: 1
+    shuffle: True
+    num_workers: 4
+    augmentation: True
+    split: train
+val_cfg:
+    batch_size: 1
+    shuffle: False
+    num_workers: 4
+    augmentation: True
+    split: val
+test_cfg:
+    batch_size: 1
+    shuffle: False
+    num_workers: 4
+    augmentation: False
+    split: test
+
